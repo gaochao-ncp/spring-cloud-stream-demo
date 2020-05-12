@@ -5,8 +5,9 @@
     <parent>
         <artifactId>spring-cloud-stream-demo</artifactId>
         <groupId>com.gc</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.5.0</version>
     </parent>
+    <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-cloud-stream-common</artifactId>
@@ -30,5 +31,50 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+                    <imageTags>
+                        <imageTag>${project.version}</imageTag>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+                    <forceTags>true</forceTags>
+                    <baseImage>${docker.baseImage}</baseImage>
+                    <volumes>${docker.volumes}</volumes>
+                    <env>
+                        <JAVA_OPTS>${docker.java.opts}</JAVA_OPTS>
+                    </env>
+                    <entryPoint>["sh","-c","java $JAVA_OPTS ${docker.java.security.egd} -jar /${project.build.finalName}.jar"]</entryPoint>
+                    <!--指定远程docker api地址-->
+                    <dockerHost>http://192.168.1.184:2375</dockerHost>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <!--${project.build.directory}表示target目录-->
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+        </plugins>
+        <finalName>${project.artifactId}</finalName>
+    </build>
 
 </project>

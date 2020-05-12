@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gc</groupId>
     <artifactId>spring-cloud-stream-demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.5.0</version>
     <name>spring-cloud-stream-demo</name>
     <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>
@@ -14,6 +14,15 @@
         <spring-cloud.version>Greenwich.SR5</spring-cloud.version>
         <spring-boot.version>2.1.13.RELEASE</spring-boot.version>
         <lombok.version>1.16.18</lombok.version>
+        <registry.version>floatpointcloud</registry.version>
+        <commons-codec.version>1.14</commons-codec.version>
+        <spring-boot-maven-plugin.version>2.1.1.RELEASE</spring-boot-maven-plugin.version>
+        <docker-maven-plugin.version>1.2.0</docker-maven-plugin.version>
+        <docker.baseImage>openjdk:8-jre-alpine</docker.baseImage>
+        <docker.volumes>/tmp</docker.volumes>
+        <docker.image.prefix>mallcloud</docker.image.prefix>
+        <docker.java.security.egd>-Djava.security.egd=file:/dev/./urandom</docker.java.security.egd>
+        <docker.java.opts>-Xms128m -Xmx128m</docker.java.opts>
     </properties>
 
     <modules>
@@ -53,29 +62,30 @@
                 <version>${lombok.version}</version>
                 <optional>true</optional>
             </dependency>
+            <!--该插件需要这个依赖-->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <fork>true</fork>
-                    <addResources>true</addResources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>

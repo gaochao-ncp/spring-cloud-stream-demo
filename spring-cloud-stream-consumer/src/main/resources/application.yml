@@ -8,14 +8,27 @@ spring:
     virtual-host: my_vhost
   cloud:
     stream:
+      #    spring cloud stream  消息队列分组持久化(Input输入通道)
+      rabbit:
+        bindings:
+          commodityOrderInvalidInput:
+            consumer:
+              delayed-exchange: true # 开启消息延迟功能
+          commodityOrderInvalidOutput:
+            producer:
+              delayed-exchange: true # 开启消息延迟功能
       bindings:
-        input:
-          destination: studyExchange # 表示要使用的Exchange名称定义
+        commodityOrderInvalidOutput:
+          destination: commodityOrderInvalidTheme # 表示要使用的Exchange名称定义
           content-type: application/json # 设置消息类型，本次为对象json，如果是文本则设置“text/plain”
-      binders:
-        defaultRabbit:
-          type: rabbit
-      default-binder: rabbit
+        commodityOrderInvalidInput:
+          group: commodityOrderInvalidGroup
+          destination: commodityOrderInvalidTheme #指定生产者的通道主题
+          content-type: application/json # 设置消息类型，本次为对象json，如果是文本则设置“text/plain”
+#      binders:
+#        test:
+#          type: rabbit
+#      default-binder: rabbit
   application:
     name: consumer-1
 

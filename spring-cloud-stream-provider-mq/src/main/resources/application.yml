@@ -1,6 +1,7 @@
 server:
   port: 8081
 spring:
+  #rabbitmq 基础配置
   rabbitmq:
     addresses: 123.56.106.192
     username: admin
@@ -12,9 +13,9 @@ spring:
         output:
           destination: studyExchange # 表示要使用的Exchange名称定义
           content-type: application/json # 设置消息类型，本次为对象json，如果是文本则设置“text/plain”
-      binders:
-        defaultRabbit:
-          type: rabbit
+#      binders:
+#        defaultRabbit:
+#          type: rabbit
       default-binder: rabbit
   application:
     name: provider
